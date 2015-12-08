@@ -9,37 +9,45 @@ Status](https://coveralls.io/repos/rjz/confab-features/badge.svg?branch=master)]
 Feature gates for [confab][confab]. Declare a list of features that can be
 toggled on and off:
 
-    var confab = require('confab');
-    var features = require('confab-features');
+```js
+var confab = require('confab');
+var features = require('confab-features');
 
-    var config = confab([
-      features([
-        'new_ui'
-      ])
-    ]);
+var config = confab([
+  features([
+    'new_ui'
+  ])
+]);
+```
 
 Run the app with gates set by either a previous transformation or environment
 overrides:
 
-    $ CONFIG_FEATURES_NEW_UI=true \
-      node app.js
+```sh
+$ CONFIG_FEATURES_NEW_UI=true \
+  node app.js
+```
 
 Then, inside the app, retrieve the feature configurations from a processed
 confab `config`:
 
-    if (config.features.new_ui) {
-      renderNewUi();
-    }
-    else {
-      renderLegacyUi();
-    }
+```js
+if (config.features.new_ui) {
+  renderNewUi();
+}
+else {
+  renderLegacyUi();
+}
+```
 
 API
 -------------------------------------------------------------------------------
 
 `confab-features` exports:
 
-    features(names: Array<String>, opts: Map<String, any>): Map<String, Boolean>
+```js
+features(names: Array<String>, opts: Map<String, any>): Map<String, Boolean>
+```
 
 #### opts
 
