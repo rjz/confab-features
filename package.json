@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "pretest": "npm run lint",
-    "test": "jasmine-node test/",
+    "test": "jasmine-node --captureExceptions test/",
     "lint": "jshint .",
-    "cover": "istanbul cover jasmine-node test/",
+    "cover": "istanbul cover jasmine-node --captureExceptions test/",
     "docs": "node -e 'require(\"./tasks\").docs([\"index.js\"])'",
     "pages": "bash tasks/pages.sh"
   },

@@ -9,4 +9,7 @@ var config = featureGates([
   }
 });
 
-process.stdout.write(JSON.stringify(config));
+process.send({
+  name: 'FEATURES',
+  data: config.features
+});

@@ -2,7 +2,7 @@
 
 var assert = require('assert');
 var assign = require('object-assign');
-var exec = require('child_process').exec;
+var fork = require('child_process').fork;
 var featureGates = require('../index');
 var path = require('path');
 
@@ -89,20 +89,14 @@ describe('confab-feature-gates', function () {
     function execTestAppWithEnv (env, callback) {
       var testAppPath = path.resolve(__dirname, 'app.js');
       var opts = { env: assign({}, process.env, env) };
-      exec('node ' + testAppPath, opts, function (err, stdout) {
-        var config;
-
-        if (err) return callback(err);
-
-        try {
-          config = JSON.parse(stdout);
-        }
-        catch (e) {
-          console.error('Failed parsing stdout:', stdout);
-          return callback(e);
+      var child = fork(testAppPath, [], opts);
+      child.on('error', callback);
+      child.on('message', function (message) {
+        if (message.name !== 'FEATURES') {
+          return callback(new Error('Unexpected message' + JSON.stringify(message)));
         }
 
-        callback(null, config.features);
+        callback(null, message.data);
       });
     }
 
