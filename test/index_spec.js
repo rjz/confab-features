@@ -14,6 +14,31 @@ describe('confab-feature-gates', function () {
     assert.equal(config.features.widgets, false);
   });
 
+  it('allows gates to come as strings or objects', function () {
+    var config = featureGates([
+      'widgets',
+      { key: 'existing' }
+    ])({});
+    assert.equal(config.features.widgets, false);
+    assert.equal(config.features.existing, false);
+  });
+
+  it('rejects object with missing "feature"', function () {
+    assert.throws(function () {
+      featureGates([
+        { x: 'widgets' },
+      ])({});
+    }, ReferenceError);
+  });
+
+  it('rejects unknown gate-types', function () {
+    assert.throws(function () {
+      featureGates([
+        ['nested']
+      ])({});
+    }, ReferenceError);
+  });
+
   it('respects pre-defined values', function () {
     var config = featureGates(['widgets', 'existing'])({
       features: {
@@ -21,6 +46,15 @@ describe('confab-feature-gates', function () {
       }
     });
     assert.equal(config.features.existing, true);
+  });
+
+  it('throws on redefined keys', function () {
+    assert.throws(function () {
+      featureGates([
+        'my_feature',
+        'my_feature'
+      ])({});
+    }, Error);
   });
 
   it('throws on invalid values', function () {
@@ -51,6 +85,29 @@ describe('confab-feature-gates', function () {
     catch (err) {
       assert.ok(err.message.match(/Invalid feature/) !== null);
     }
+  });
+
+  describe('.features() - invoking directly', function () {
+    it('returns ordered list of features', function () {
+      var config = featureGates([
+        'widgets',
+        { key: 'existing', description: 'a feature' }
+      ])({});
+      assert.deepEqual(config.features(), [
+        {
+          key: 'existing',
+          envKey: 'CONFIG_FEATURES_EXISTING',
+          description: 'a feature',
+          value: false
+        },
+        {
+          key: 'widgets',
+          envKey: 'CONFIG_FEATURES_WIDGETS',
+          description: 'no description',
+          value: false
+        }
+      ]);
+    });
   });
 
   describe('when opts.configKey is something else entirely', function () {
@@ -97,7 +154,11 @@ describe('confab-feature-gates', function () {
           return callback(new Error('Unexpected message' + JSON.stringify(message)));
         }
 
-        callback(null, message.data);
+        callback(null, message.data.reduce(function (features, item) {
+          var newFeature = {};
+          newFeature[item.key] = item.value;
+          return assign({}, features, newFeature );
+        }, {}));
       });
     }
 
