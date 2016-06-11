@@ -40,13 +40,32 @@ else {
 }
 ```
 
+The full list of configured features is available by invoking `config.features`
+directly:
+
+```js
+config.features().forEach(function (feature) {
+  console.log(feature.key, feature.description);
+});
+```
+
 API
 -------------------------------------------------------------------------------
 
 `confab-features` exports:
 
 ```js
-features(names: Array<String>, opts: Map<String, any>): Map<String, Boolean>
+features(items: Array<Object|String>, opts: Map<String, any>): Map<String, Boolean>
+```
+
+Note that `items` may contain both string `keys` and simple object with a `key`
+and (optional) description of the feature:
+
+```
+[
+  'new_ui',
+  { key: 'new_campaign', description: 'A switch to flip' }
+]
 ```
 
 #### opts

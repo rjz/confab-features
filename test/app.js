@@ -11,5 +11,5 @@ var config = featureGates([
 
 process.send({
   name: 'FEATURES',
-  data: config.features
+  data: config.features()
 });
