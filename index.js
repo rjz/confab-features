@@ -3,6 +3,19 @@
 var confab = require('confab');
 var assign = require('object-assign');
 
+var DEFAULT_DESCRIPTION = 'no description';
+
+function Feature (attrs) {
+  if (!(attrs && attrs.key)) {
+    throw new ReferenceError('feature key is required');
+  }
+
+  this.key = attrs.key;
+  this.envKey = attrs.envKey;
+  this.description = attrs.description || DEFAULT_DESCRIPTION;
+  this.value = false;
+}
+
 // - {Array<String, Feature>} knownFeatureByKey - a map of features
 // - {Object<String, Boolean>} configFeatureValuesByKey - a map of keys:vals
 function mergeConfigFeatureValuesByKey (knownFeaturesByKey, configFeatureValuesByKey) {
@@ -72,43 +85,33 @@ function validateFeatureValuesByKey (knownKeys, featureValuesByKey) {
  * @id features
  * @group Reference
  * @type Function
- * @param {Array} keys - a list of name features
+ * @param {Array<String|Feature>} keys - a list of features or feature keys
  * @param {Object} userOpts - optional overrides for the `configKey` (default:
  *   `"features"`) and strict validation (default: `true`)
  * @return Function
  */
 module.exports = function features (features, userOpts) {
 
-  var DEFAULT_DESCRIPTION = 'no description';
-
   var opts = assign({
     configKey: 'features',
     validate: true
   }, userOpts);
 
+  var envKeyPrefix = ('config_' + opts.configKey + '_').toUpperCase();
+
   function createEnvKey (key) {
-    var prefix = ('config_' + opts.configKey + '_').toUpperCase();
-    return prefix + key.toUpperCase();
-  }
-
-  function Feature (attrs) {
-    if (!(attrs && attrs.key)) {
-      throw new ReferenceError('feature key is required');
+    if (key) {
+      return envKeyPrefix + key.toUpperCase();
     }
-
-    this.key = attrs.key;
-    this.description = attrs.description || DEFAULT_DESCRIPTION;
-    this.envKey = attrs.envKey || createEnvKey(this.key);
-    this.value = false;
   }
 
   function createFeature (item) {
     var type = !!item && typeof item;
     switch (type) {
       case 'string':
-        return new Feature({ key: item });
+        return new Feature({ key: item, envKey: createEnvKey(item) });
       case 'object':
-        return new Feature(item);
+        return new Feature(assign({ envKey: createEnvKey(item.key) }, item));
     }
   }
 
