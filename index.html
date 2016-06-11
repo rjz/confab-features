@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <title>confab-features</title>
+  </head>
+  <body>
+  <a href="https://github.com/rjz/confab-features"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+    <div class="content">
+      <section class="container">
+        <h1><a name="top"></a>confab-features <small><a href="https://github.com/rjz/confab-features/releases/v0.0.2">v0.0.2</a></small></h1>
+
+        <div>
+          <p>Runtime feature gating for confab applications</p>
+        </div>
+
+        <h3>Contents</h3>
+        <ul>
+          <li><a href="https://github.com/rjz/confab-features">Source code</a></li>
+          <li><a href="https://github.com/rjz/confab-features/tree/master/README.md">Readme</a></li>
+          <li><a href="https://github.com/rjz/confab-features/tree/master/LICENSE">License (MIT)</a></li>
+            <li>
+              <a href="#Reference">Reference</a>
+              <ul>
+                <li>
+                  <a href="#Reference-features"><code>features</code></a>
+                </li>
+              </ul>
+            </li>
+        </ul>
+
+          <hr />
+          <a name="Reference"></a>
+          <a name="Reference-features"></a>
+            <section>
+              <header>
+                <ul class="pull-right nav-meta nav-inline">
+                  <li><a href="#Reference">Reference</a></li>
+                  <li><a href="#top">top</a></li>
+                </ul>
+            
+                <h3>
+                  <a name="features"></a><code>features</code>
+                  <small>(<a href="https://github.com/rjz/confab-features/tree/master/index.js#L46">definition</a>)</small>
+                </h3>
+              </header>
+              <div>
+            
+                <p>Extends the configuration with a list of enabled features.</p>
+
+<pre><code>var confab = require('confab');
+var features = require('confab-features');
+
+var config = confab([
+  features([
+    {
+      key: 'new_campaign',
+      description: 'A switch to flip'
+    },
+    'new_ui' // equivalent to `{ key: 'new_ui }`
+  ])
+]);
+</code></pre>
+
+<p>Run the app with features set by either a previous transformation or
+environment overrides:</p>
+
+<pre><code>$ CONFIG_FEATURES_NEW_UI=true \
+  node app.js
+</code></pre>
+
+<p>Then, inside the app, retrieve the feature configurations from a processed
+confab <code>config</code>:</p>
+
+<pre><code>if (config.features.new_ui) {
+  renderNewUi();
+}
+else {
+  renderLegacyUi();
+}
+</code></pre>
+
+<p>The set of all defined features can be retrieved by invoking
+<code>config.features</code> directly:</p>
+
+<pre><code>config.features().forEach(function (feature) {
+  console.log(feature.key, feature.description);
+});
+</code></pre>
+            
+            
+                <h4>Arguments</h4>
+                <table>
+                  <tr>
+                    <th width="15%">Type</th>
+                    <th width="15%">Name</th>
+                    <th width="60%">Description</th>
+                  </tr>
+                  <tr>
+                    <td><code>Array&lt;String|Feature&gt;</code></td>
+                    <td>keys</td>
+                    <td>a list of features or feature keys</td>
+                  </tr>
+      <tr>
+                    <td><code>Object</code></td>
+                    <td>userOpts</td>
+                    <td>optional overrides for the `configKey` (default: `&quot;features&quot;`) and strict validation (default: `true`)</td>
+                  </tr>
+    </table>
+
+            
+              </div>
+            
+            </section>
+            
+
+      </section>
+    </div>
+    <footer class="dark">
+      <p class="copyright">
+        confab-features are another unrepentant production from <a href="http://rjzaworski.com">rj zaworski</a>
+      </p>
+    </footer>
+  </body>
+</html>
+
