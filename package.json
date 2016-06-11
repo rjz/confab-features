@@ -1,6 +1,6 @@
 {
   "name": "confab-features",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Runtime feature gating for confab applications",
   "main": "index.js",
   "scripts": {
