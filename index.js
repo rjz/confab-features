@@ -3,14 +3,8 @@
 var confab = require('confab');
 var assign = require('object-assign');
 
-/**
- *  @private
- *  @type Function
- *  @return Function
- *  @param {Array<String, Feature>} knownFeatureByKey - a map of features
- *  @param {Object<String, Boolean>} configFeatureValuesByKey - a map of feature
- *            values
- */
+// - {Array<String, Feature>} knownFeatureByKey - a map of features
+// - {Object<String, Boolean>} configFeatureValuesByKey - a map of keys:vals
 function mergeConfigFeatureValuesByKey (knownFeaturesByKey, configFeatureValuesByKey) {
   var keys = Object.keys(knownFeaturesByKey).sort();
   return keys.reduce(function (allFeatureValuesByKey, k) {
@@ -21,14 +15,9 @@ function mergeConfigFeatureValuesByKey (knownFeaturesByKey, configFeatureValuesB
   }, assign({}, configFeatureValuesByKey));
 }
 
-/**
- *  @private
- *  @type Function
- *  @return Function
- *  @param {Array<String>} knownKeys - a list of known feature keys
- *  @param {Object<String, Boolean>} featureValuesByKey - a map of feature
- *            values
- */
+
+// - {Array<String>} knownKeys - a list of known feature keys
+// - {Object<String, Boolean>} featureValuesByKey - a map of keys:vals
 function validateFeatureValuesByKey (knownKeys, featureValuesByKey) {
   Object.keys(featureValuesByKey).forEach(function (k) {
     var val = featureValuesByKey[k];
